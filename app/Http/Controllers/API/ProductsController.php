@@ -11,8 +11,20 @@ class ProductsController extends Controller
 {
     public function getProduct()
     {
-        $products = Products::select('products.id', 'products.name as nama_makanan');
+        // Mengambil semua data produk dengan kolom tertentu
+        $products = Products::select(
+            'products.id',
+            'products.name as nama_makanan',
+            'products.image as gambar',
+            'products.desc as deskripsi',
+            'products.price as harga'
+        )->get();
+
+        // Mengembalikan data produk
+        return $products;
     }
+
+
 
     public function detailProduct($id)
     {

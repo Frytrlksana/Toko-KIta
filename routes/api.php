@@ -19,28 +19,37 @@ use App\Http\Controllers\API\ProductsController;
 */
 
 Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
 Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // Rute Umum
-    Route::get('logout', [AuthController::class, 'logout']);
+    Route::get('getProduct', [ProductsController::class, 'getProduct']);
+    Route::get('detailProduct/{id}', [ProductsController::class, 'detailProduct']);
 
 
     // Rute untuk Admin
     Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
         Route::prefix('admin')->group(function () {
-            Route::get('index', [ProductsController::class, 'index']);
+            //auth admin
+            Route::post('login', [AuthController::class, 'login']);
+            Route::get('logout', [AuthController::class, 'logout']);
+
+            //product admin
             Route::post('addProduct', [ProductsController::class, 'addProduct']);
-            Route::post('products', [ProductsController::class, 'store']);
-            Route::get('products/{id}/edit', [ProductsController::class, 'edit']);
-            Route::put('products/{id}', [ProductsController::class, 'update']);
-            Route::delete('products/{id}', [ProductsController::class, 'destroy']);
+            Route::get('getProduct', [ProductsController::class, 'getProduct']);
+            Route::get('detailProduct/{id}', [ProductsController::class, 'detailProduct']);
+            Route::post('updateProduct/{id}', [ProductsController::class, 'updateProduct']);
+            Route::post('deleteProduct/{id}', [ProductsController::class, 'deleteProduct']);
         });
     });
 
     // Rute untuk User
     Route::middleware('role:user')->group(function () {
+        Route::post('login', [AuthController::class, 'login']);
+        Route::get('logout', [AuthController::class, 'logout']);
+
+        Route::get('getProduct', [ProductsController::class, 'getProduct']);
+        Route::get('detailProduct/{id}', [ProductsController::class, 'detailProduct']);
 
     });
 });
