@@ -20,10 +20,14 @@ class ProductsController extends Controller
             'products.price as harga'
         )->get();
 
-        // Mengembalikan data produk
-        return $products;
-    }
+        // Cek apakah produk kosong
+        if ($products->isEmpty()) {
+            return response()->json(["message" => "Produk belum tersedia"], 200);
+        }
 
+        // Mengembalikan data produk jika tersedia
+        return response()->json(["products" => $products], 200);
+    }
 
 
     public function detailProduct($id)

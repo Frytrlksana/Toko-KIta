@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ProductsController;
+use App\Http\Controllers\API\CategoryController;
 
 /*
 |-------------------------------------------------------------------------- 
@@ -25,9 +26,17 @@ Route::prefix('admin')->group(function () {
     Route::post('login', [AuthController::class, 'adminLogin']);
     Route::post('logout', [AuthController::class, 'adminLogout'])->middleware('auth:sanctum');
 
-    // Menggunakan middleware 'auth.user' untuk memastikan hanya admin yang bisa mengakses
+
     Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
-        // Admin Routes
+        // Category Admin Access
+        Route::prefix('categories')->group(function () {
+            Route::get('getCategory', [CategoryController::class, 'getCategory']);
+            Route::get('detailCategory/{id}', [CategoryController::class, 'detailCategory']);
+            Route::post('addCategory', [CategoryController::class, 'addCategory']);
+            Route::post('deleteCategory/{id}', [CategoryController::class, 'deleteCategory']);
+        });
+
+        // Products Admin Access
         Route::post('addProduct', [ProductsController::class, 'addProduct']);
         Route::get('getProduct', [ProductsController::class, 'getProduct']);
         Route::get('detailProduct/{id}', [ProductsController::class, 'detailProduct']);
@@ -40,11 +49,17 @@ Route::prefix('admin')->group(function () {
 Route::prefix('user')->group(function () {
     // Login dan Logout User
     Route::post('login', [AuthController::class, 'userLogin']);
-    Route::post('logout', [AuthController::class, 'userLogout'])->middleware('auth:sanctum');  // Menggunakan middleware auth:sanctum
+    Route::post('logout', [AuthController::class, 'userLogout'])->middleware('auth:sanctum');
 
-    // Menggunakan middleware 'auth:sanctum' untuk memastikan hanya pengguna yang terautentikasi yang bisa mengakses
+
     Route::middleware(['auth:sanctum'])->group(function () {
-        // Rute Product untuk User
+        // Category User Access
+        Route::prefix('categories')->group(function () {
+            Route::get('getCategory', [CategoryController::class, 'getCategory']);
+            Route::get('detailCategory/{id}', [CategoryController::class, 'detailCategory']);
+        });
+
+        // Products User Access
         Route::get('getProduct', [ProductsController::class, 'getProduct']);
         Route::get('detailProduct/{id}', [ProductsController::class, 'detailProduct']);
     });

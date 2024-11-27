@@ -27,6 +27,8 @@ class Products extends Model
         return $this->hasMany(DetailOrders::class);
     }
 
+
+
     protected static function boot()
     {
         parent::boot();
