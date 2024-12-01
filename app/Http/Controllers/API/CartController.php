@@ -15,12 +15,12 @@ class CartController extends Controller
     public function getCart()
     {
         $user_id = Auth::user()->id;
-        $cartItems = Cart::where('user_id', $user_id)->first();             
+        $cartItems = Cart::where('user_id', $user_id)->first();
 
         if (!$cartItems) {
             return response()->json(['error' => 'Keranjang tidak ditemukan'], 404);
         }
-        
+
         $cartDetails = CartDetail::where('cart_id', $cartItems->id)->get();
         $result = [
             'carts' => $cartDetails,
@@ -29,7 +29,7 @@ class CartController extends Controller
 
         return response()->json($result, 200);
     }
-    
+
     public function addCart(Request $request)
     {
         $user = $request->user();
@@ -41,57 +41,57 @@ class CartController extends Controller
     }
 
     public function addCartDetail(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'cart_id' => 'required|exists:carts,id', 
-        'product_id' => 'required|exists:products,id',
-        'qty' => 'required|integer|min:1',
-    ]);
+    {
+        $validator = Validator::make($request->all(), [
+            'cart_id' => 'required|exists:carts,id',
+            'product_id' => 'required|exists:products,id',
+            'qty' => 'required|integer|min:1',
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors(), 'message' => 'Validasi gagal'], 400);
-    }
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(), 'message' => 'Validasi gagal'], 400);
+        }
 
-    $cart = Cart::where('id', $request->cart_id)->where('user_id', Auth::id())->first();
+        $cart = Cart::where('id', $request->cart_id)->where('user_id', Auth::id())->first();
 
-    if (!$cart) {
-        return response()->json(['message' => 'Keranjang tidak ditemukan'], 404);
-    }
+        if (!$cart) {
+            return response()->json(['message' => 'Keranjang tidak ditemukan'], 404);
+        }
 
-    $cartDetail = CartDetail::create([
-        'cart_id' => $request->cart_id,
-        'product_id' => $request->product_id,
-        'qty' => $request->qty,
-    ]);
+        $cartDetail = CartDetail::create([
+            'cart_id' => $request->cart_id,
+            'product_id' => $request->product_id,
+            'qty' => $request->qty,
+        ]);
 
-    return response()->json(['cartDetail' => $cartDetail, 'message' => 'Item berhasil ditambahkan ke keranjang'], 200);
+        return response()->json(['cartDetail' => $cartDetail, 'message' => 'Item berhasil ditambahkan ke keranjang'], 200);
     }
 
     public function editCartQuantity(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'cart_id' => 'required|exists:carts,id',
-        'product_id' => 'required|exists:products,id',
-        'qty' => 'required|integer|min:1',
-    ]);
+    {
+        $validator = Validator::make($request->all(), [
+            'cart_id' => 'required|exists:carts,id',
+            'product_id' => 'required|exists:products,id',
+            'qty' => 'required|integer|min:1',
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors(), 'message' => 'Validasi gagal'], 400);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(), 'message' => 'Validasi gagal'], 400);
+        }
+
+        $cartDetail = CartDetail::where('cart_id', $request->cart_id)
+            ->where('product_id', $request->product_id)
+            ->first();
+
+        if (!$cartDetail) {
+            return response()->json(['message' => 'Item tidak ditemukan di keranjang'], 404);
+        }
+
+        $cartDetail->qty = $request->qty;
+        $cartDetail->save();
+
+        return response()->json(['cartDetail' => $cartDetail, 'message' => 'Jumlah produk dalam keranjang berhasil diubah'], 200);
     }
-
-    $cartDetail = CartDetail::where('cart_id', $request->cart_id)
-                             ->where('product_id', $request->product_id)
-                             ->first();
-
-    if (!$cartDetail) {
-        return response()->json(['message' => 'Item tidak ditemukan di keranjang'], 404);
-    }
-
-    $cartDetail->qty = $request->qty;
-    $cartDetail->save();
-
-    return response()->json(['cartDetail' => $cartDetail, 'message' => 'Jumlah produk dalam keranjang berhasil diubah'], 200);
-}
 
 
     public function deleteCart($id)

@@ -26,15 +26,12 @@ Route::prefix('admin')->group(function () {
     Route::post('login', [AuthController::class, 'adminLogin']);
     Route::post('logout', [AuthController::class, 'adminLogout'])->middleware('auth:sanctum');
 
-
     Route::middleware(['auth:sanctum', 'auth.user'])->group(function () {
         // Category Admin Access
-        Route::prefix('categories')->group(function () {
-            Route::get('getCategory', [CategoryController::class, 'getCategory']);
-            Route::get('detailCategory/{id}', [CategoryController::class, 'detailCategory']);
-            Route::post('addCategory', [CategoryController::class, 'addCategory']);
-            Route::post('deleteCategory/{id}', [CategoryController::class, 'deleteCategory']);
-        });
+        Route::post('addCategory', [CategoryController::class, 'addCategory']);
+        Route::get('getCategory', [CategoryController::class, 'getCategory']);
+        Route::get('detailCategory/{id}', [CategoryController::class, 'detailCategory']);
+        Route::post('deleteCategory/{id}', [CategoryController::class, 'deleteCategory']);
 
         // Products Admin Access
         Route::post('addProduct', [ProductsController::class, 'addProduct']);
@@ -51,13 +48,10 @@ Route::prefix('user')->group(function () {
     Route::post('login', [AuthController::class, 'userLogin']);
     Route::post('logout', [AuthController::class, 'userLogout'])->middleware('auth:sanctum');
 
-
     Route::middleware(['auth:sanctum'])->group(function () {
         // Category User Access
-        Route::prefix('categories')->group(function () {
-            Route::get('getCategory', [CategoryController::class, 'getCategory']);
-            Route::get('detailCategory/{id}', [CategoryController::class, 'detailCategory']);
-        });
+        Route::get('getCategory', [CategoryController::class, 'getCategory']);
+        Route::get('detailCategory/{id}', [CategoryController::class, 'detailCategory']);
 
         // Products User Access
         Route::get('getProduct', [ProductsController::class, 'getProduct']);

@@ -11,23 +11,26 @@ class ProductsController extends Controller
 {
     public function getProduct()
     {
-        // Mengambil semua data produk dengan kolom tertentu
         $products = Products::select(
             'products.id',
+            'category_id',
             'products.name as nama_makanan',
-            'products.image as gambar',
-            'products.desc as deskripsi',
-            'products.price as harga'
-        )->get();
+            'categories.name as nama_category',
+            'price',
+            'desc'
+        )
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->get();
 
-        // Cek apakah produk kosong
+        // Cek apakah ada produk
         if ($products->isEmpty()) {
-            return response()->json(["message" => "Produk belum tersedia"], 200);
+            return response()->json(["message" => "Belum ada produk yang tersedia"], 200);
         }
 
-        // Mengembalikan data produk jika tersedia
+        // Jika ada produk, kembalikan data produk
         return response()->json(["products" => $products], 200);
     }
+
 
 
     public function detailProduct($id)
@@ -44,6 +47,7 @@ class ProductsController extends Controller
     public function addProduct(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'category_id' => 'required',
             'name' => 'required',
             'desc' => 'required',
             'image' => 'required',
@@ -63,6 +67,7 @@ class ProductsController extends Controller
     public function updateProduct(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
+            'category_id' => 'required',
             'name' => 'required',
             'image' => 'required',
             'price' => 'required',
@@ -80,6 +85,7 @@ class ProductsController extends Controller
         }
 
         $product->update([
+            'category_id' => $request->category_id,
             'name' => $request->name,
             'image' => $request->image,
             'price' => $request->price,
