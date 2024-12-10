@@ -1,0 +1,62 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #F8F4E1;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    text-align: center;
+    padding: 50px;
+}
+
+.logo img {
+    width: 150px;
+}
+
+.login {
+    margin: 5% 15%;
+    display: flex;
+    text-decoration: none;
+    background-color: #AF8F6F;
+    color: #D4D2D2;
+    font-size: 15px;
+    justify-content: left;
+    border-radius: 30px;
+    padding-left: 30px;
+    gap: 30px;
+    width: 70%;
+    height: 30%;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    text-decoration: none;
+}
+
+.buttons h4 {
+    text-decoration: none;
+    padding: 20px 100px;
+    background-color: #74512D;
+    color: #FFFFFF;
+    font-size: 20px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.buttons h4:hover {
+    background-color: #8d6e63;
+}
+
+a {
+    color: inherit; 
+    text-decoration: none; 
+}
+
+a:hover {
+    color: #74512D; 
+}
